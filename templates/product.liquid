@@ -1,0 +1,23 @@
+<section class="product-ficha">
+  <div class="product-images">
+    {% for image in product.images %}
+      <img src="{{ image | img_url: 'large' }}" alt="{{ product.title }}">
+    {% endfor %}
+  </div>
+  <div class="product-details">
+    <h1>{{ product.title }}</h1>
+    <p class="short-description">{{ product.metafields.custom.short_description }}</p>
+    <div class="long-description">
+      <h3>Descripción (ES)</h3>
+      <p>{{ product.metafields.custom.description_es }}</p>
+      <h3>Description (EN)</h3>
+      <p>{{ product.metafields.custom.description_en }}</p>
+    </div>
+    <span class="price">{{ product.price | money }}</span>
+    <form method="post" action="/cart/add">
+      <input type="hidden" name="id" value="{{ product.variants.first.id }}">
+      <button type="submit">Agregar al carrito</button>
+    </form>
+    {% include 'judgeme_widgets' %}
+  </div>
+</section>

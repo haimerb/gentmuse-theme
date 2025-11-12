@@ -1,0 +1,24 @@
+[
+  {
+    "name": "GentMuse Theme Settings",
+    "settings": [
+      {
+        "type": "image_picker",
+        "id": "logo",
+        "label": "Logo principal"
+      },
+      {
+        "type": "color",
+        "id": "accent_color",
+        "label": "Color dorado",
+        "default": "#C3A14A"
+      },
+      {
+        "type": "color",
+        "id": "background_color",
+        "label": "Color de fondo",
+        "default": "#FAFAF0"
+      }
+    ]
+  }
+]
