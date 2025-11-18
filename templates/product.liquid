@@ -1,23 +1,250 @@
-<section class="product-ficha">
-  <div class="product-images">
-    {% for image in product.images %}
-      <img src="{{ image | img_url: 'large' }}" alt="{{ product.title }}">
-    {% endfor %}
-  </div>
-  <div class="product-details">
-    <h1>{{ product.title }}</h1>
-    <p class="short-description">{{ product.metafields.custom.short_description }}</p>
-    <div class="long-description">
-      <h3>Descripción (ES)</h3>
-      <p>{{ product.metafields.custom.description_es }}</p>
-      <h3>Description (EN)</h3>
-      <p>{{ product.metafields.custom.description_en }}</p>
+<div class="container">
+  <div class="product-page">
+    <div class="product-images">
+      {% if product.featured_image %}
+        <img src="{{ product.featured_image | img_url: '800x' }}" alt="{{ product.title }}" loading="lazy" id="main-product-image">
+      {% else %}
+        <div class="placeholder-image">{{ product.title }}</div>
+      {% endif %}
+      
+      {% if product.images.size > 1 %}
+        <div class="product-thumbnails">
+          {% for image in product.images limit: 4 %}
+            <img src="{{ image | img_url: '100x' }}" 
+                 data-large="{{ image | img_url: '800x' }}"
+                 alt="{{ product.title }} - Image {{ forloop.index }}" 
+                 loading="lazy">
+          {% endfor %}
+        </div>
+      {% endif %}
     </div>
-    <span class="price">{{ product.price | money }}</span>
-    <form method="post" action="/cart/add">
-      <input type="hidden" name="id" value="{{ product.variants.first.id }}">
-      <button type="submit">Agregar al carrito</button>
-    </form>
-    {% include 'judgeme_widgets' %}
+    
+    <div class="product-info">
+      <h1>{{ product.title }}</h1>
+      
+      <div class="product-price">
+        {% if product.compare_at_price > product.price %}
+          <span class="price-compare">{{ product.compare_at_price | money }}</span>
+          <span class="price-sale">{{ product.price | money }}</span>
+          <span class="price-badge">OFERTA</span>
+        {% else %}
+          {{ product.price | money }}
+        {% endif %}
+      </div>
+      
+      <div class="product-description">
+        {{ product.description }}
+      </div>
+      
+      {% form 'product', product, id: 'product-form', onsubmit: 'addToCart(this); return false;' %}
+        <input type="hidden" name="id" value="{{ product.selected_or_first_available_variant.id }}">
+        
+        {% unless product.has_only_default_variant %}
+          <div class="product-variants">
+            <label for="product-select">{{ 'products.product.variant' | t }}</label>
+            <select name="id" id="product-select" class="product-select">
+              {% for variant in product.variants %}
+                <option 
+                  value="{{ variant.id }}" 
+                  {% unless variant.available %}disabled{% endunless %}
+                  {% if variant == product.selected_or_first_available_variant %}selected{% endif %}
+                  data-price="{{ variant.price | money }}">
+                  {{ variant.title }} - {{ variant.price | money }}
+                  {% unless variant.available %} ({{ 'products.product.sold_out' | t }}){% endunless %}
+                </option>
+              {% endfor %}
+            </select>
+          </div>
+        {% endunless %}
+        
+        <div class="product-quantity">
+          <label for="quantity">Cantidad</label>
+          <input type="number" id="quantity" name="quantity" value="1" min="1">
+        </div>
+        
+        <button type="submit" name="add" class="btn-add-to-cart" {% unless product.available %}disabled{% endunless %}>
+          {% if product.available %}
+            {{ 'products.product.add_to_cart' | t }}
+          {% else %}
+            {{ 'products.product.sold_out' | t }}
+          {% endif %}
+        </button>
+        
+        {% if product.available %}
+          <div class="product-inventory">
+            {% if product.selected_or_first_available_variant.inventory_quantity <= 5 and product.selected_or_first_available_variant.inventory_quantity > 0 %}
+              <span class="low-stock">¡Solo quedan {{ product.selected_or_first_available_variant.inventory_quantity }}!</span>
+            {% endif %}
+          </div>
+        {% endif %}
+      {% endform %}
+      
+      {% if product.metafields.custom.ingredients %}
+        <div class="product-details">
+          <h3>Ingredientes</h3>
+          <p>{{ product.metafields.custom.ingredients }}</p>
+        </div>
+      {% endif %}
+      
+      {% if product.metafields.custom.benefits %}
+        <div class="product-details">
+          <h3>Beneficios</h3>
+          <p>{{ product.metafields.custom.benefits }}</p>
+        </div>
+      {% endif %}
+      
+      {% if product.metafields.custom.usage %}
+        <div class="product-details">
+          <h3>Modo de uso</h3>
+          <p>{{ product.metafields.custom.usage }}</p>
+        </div>
+      {% endif %}
+    </div>
   </div>
-</section>
+  
+  {% if product.tags contains 'featured' %}
+    <div class="related-products">
+      <h2>También te puede interesar</h2>
+      <div class="products-grid">
+        {% assign related_products = collections.all.products | where: "tags", "featured" | limit: 4 %}
+        {% for related_product in related_products %}
+          {% unless related_product.id == product.id %}
+            <div class="product-card">
+              <a href="{{ related_product.url }}">
+                {% if related_product.featured_image %}
+                  <img src="{{ related_product.featured_image | img_url: '600x' }}" alt="{{ related_product.title }}" loading="lazy">
+                {% endif %}
+                <h3>{{ related_product.title }}</h3>
+                <p class="product-price">{{ related_product.price | money }}</p>
+              </a>
+            </div>
+          {% endunless %}
+        {% endfor %}
+      </div>
+    </div>
+  {% endif %}
+</div>
+
+<style>
+.product-variants,
+.product-quantity {
+  margin: 25px 0;
+}
+
+.product-variants label,
+.product-quantity label {
+  display: block;
+  margin-bottom: 10px;
+  font-size: 13px;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  color: var(--color-gray);
+}
+
+.product-quantity input {
+  width: 80px;
+  padding: 15px;
+  border: 2px solid var(--color-light-gray);
+  background: var(--color-white);
+  font-family: var(--font-body);
+  font-size: 14px;
+  text-align: center;
+}
+
+.btn-add-to-cart {
+  width: 100%;
+  padding: 20px;
+  background: var(--color-black);
+  color: var(--color-white);
+  border: 2px solid var(--color-black);
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: var(--transition);
+  font-family: var(--font-body);
+}
+
+.btn-add-to-cart:hover:not(:disabled) {
+  background: transparent;
+  color: var(--color-black);
+}
+
+.btn-add-to-cart:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.product-inventory {
+  margin-top: 15px;
+  text-align: center;
+}
+
+.low-stock {
+  color: #d32f2f;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.price-compare {
+  text-decoration: line-through;
+  color: var(--color-gray);
+  margin-right: 10px;
+}
+
+.price-sale {
+  color: #d32f2f;
+  font-weight: 700;
+}
+
+.price-badge {
+  display: inline-block;
+  background: #d32f2f;
+  color: white;
+  padding: 5px 10px;
+  font-size: 11px;
+  margin-left: 10px;
+  border-radius: 3px;
+}
+
+.product-details {
+  margin-top: 40px;
+  padding-top: 40px;
+  border-top: 1px solid var(--color-light-gray);
+}
+
+.product-details h3 {
+  font-size: 1.2rem;
+  margin-bottom: 15px;
+  color: var(--color-dark);
+}
+
+.product-details p {
+  color: var(--color-gray);
+  line-height: 1.8;
+}
+
+.related-products {
+  margin-top: 100px;
+  padding-top: 60px;
+  border-top: 1px solid var(--color-light-gray);
+}
+
+.related-products h2 {
+  text-align: center;
+  margin-bottom: 60px;
+  font-size: 2.5rem;
+}
+</style>
+
+<script>
+document.getElementById('product-select')?.addEventListener('change', function() {
+  const selectedOption = this.options[this.selectedIndex];
+  const price = selectedOption.getAttribute('data-price');
+  const priceElement = document.querySelector('.product-price');
+  if (priceElement && price) {
+    priceElement.textContent = price;
+  }
+});
+</script>

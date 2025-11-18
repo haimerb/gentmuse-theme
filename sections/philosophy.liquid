@@ -1,0 +1,49 @@
+<section class="philosophy-section">
+  <div class="philosophy-content">
+    <h2>{{ section.settings.main_text }}</h2>
+    
+    {% for block in section.blocks %}
+      <div class="philosophy-item" {{ block.shopify_attributes }}>
+        <p>{{ block.settings.label }}</p>
+        <p>{{ block.settings.value }}</p>
+      </div>
+    {% endfor %}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Philosophy",
+  "settings": [
+    {
+      "type": "textarea",
+      "id": "main_text",
+      "label": "Main Text",
+      "default": "No creemos en rutinas.\nCreemos en rituales.\nNo creemos en género.\nCreemos en esencia.\nNo creemos en productos.\nCreemos en momentos."
+    }
+  ],
+  "blocks": [
+    {
+      "type": "item",
+      "name": "Philosophy Item",
+      "settings": [
+        {
+          "type": "text",
+          "id": "label",
+          "label": "Label"
+        },
+        {
+          "type": "text",
+          "id": "value",
+          "label": "Value"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Philosophy"
+    }
+  ]
+}
+{% endschema %}

@@ -1,14 +1,202 @@
 <!DOCTYPE html>
-<html lang="es">
-  <head>
-    <meta charset="UTF-8">
-    <title>{{ page_title }}</title>
-    {{ 'styles.css' | asset_url | stylesheet_tag }}
-    {{ content_for_header }}
-  </head>
-  <body>
-    {% section 'header' %}
+<html lang="{{ request.locale.iso_code }}" class="no-js">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#000000">
+  
+  <title>{{ page_title }}{% if current_tags %} &ndash; {{ current_tags | join: ', ' }}{% endif %}{% if current_page != 1 %} &ndash; {{ 'general.meta.page' | t: page: current_page }}{% endif %}{% unless page_title contains shop.name %} &ndash; {{ shop.name }}{% endunless %}</title>
+  
+  {% if page_description %}
+    <meta name="description" content="{{ page_description | escape }}">
+  {% endif %}
+  
+  <link rel="canonical" href="{{ canonical_url }}">
+  
+  {% if settings.favicon %}
+    <link rel="icon" type="image/png" href="{{ settings.favicon | img_url: '32x32' }}">
+  {% endif %}
+  
+  <!-- Preconnect to external resources -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="preconnect" href="https://cdn.shopify.com" crossorigin>
+  
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600&family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  
+  {{ content_for_header }}
+  
+  {{ 'styles.css' | asset_url | stylesheet_tag }}
+  
+  <script>
+    document.documentElement.className = document.documentElement.className.replace('no-js', 'js');
+    
+    // Cart functionality
+    window.theme = window.theme || {};
+    theme.routes = {
+      cart_add_url: '{{ routes.cart_add_url }}',
+      cart_change_url: '{{ routes.cart_change_url }}',
+      cart_update_url: '{{ routes.cart_update_url }}',
+      cart_url: '{{ routes.cart_url }}'
+    };
+    
+    theme.strings = {
+      addToCart: {{ 'products.product.add_to_cart' | t | json }},
+      soldOut: {{ 'products.product.sold_out' | t | json }},
+      unavailable: {{ 'products.product.unavailable' | t | json }}
+    };
+    
+    theme.moneyFormat = {{ shop.money_format | json }};
+  </script>
+  
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      // Header scroll effect
+      const header = document.querySelector('.site-header');
+      if (header) {
+        window.addEventListener('scroll', function() {
+          if (window.scrollY > 100) {
+            header.classList.add('scrolled');
+          } else {
+            header.classList.remove('scrolled');
+          }
+        });
+      }
+      
+      // Mobile menu toggle
+      const mobileMenuButton = document.querySelector('.mobile-menu-toggle');
+      const mainNav = document.querySelector('.main-nav');
+      
+      if (mobileMenuButton && mainNav) {
+        mobileMenuButton.addEventListener('click', function() {
+          mainNav.classList.toggle('active');
+          this.classList.toggle('active');
+        });
+      }
+      
+      // Product image gallery
+      const thumbnails = document.querySelectorAll('.product-thumbnails img');
+      const mainImage = document.querySelector('.product-images > img');
+      
+      if (thumbnails.length && mainImage) {
+        thumbnails.forEach(thumb => {
+          thumb.addEventListener('click', function() {
+            mainImage.src = this.src.replace('100x', '800x');
+            thumbnails.forEach(t => t.classList.remove('active'));
+            this.classList.add('active');
+          });
+        });
+        
+        if (thumbnails[0]) {
+          thumbnails[0].classList.add('active');
+        }
+      }
+      
+      // Scroll to top button
+      const scrollButton = document.createElement('button');
+      scrollButton.className = 'scroll-to-top';
+      scrollButton.innerHTML = '↑';
+      scrollButton.setAttribute('aria-label', 'Scroll to top');
+      document.body.appendChild(scrollButton);
+      
+      window.addEventListener('scroll', function() {
+        if (window.scrollY > 500) {
+          scrollButton.classList.add('visible');
+        } else {
+          scrollButton.classList.remove('visible');
+        }
+      });
+      
+      scrollButton.addEventListener('click', function() {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      });
+    });
+  </script>
+</head>
+<body class="template-{{ template.name | handle }}">
+  
+  <a class="skip-to-content" href="#main-content">{{ 'accessibility.skip_to_text' | t }}</a>
+  
+  {% section 'header' %}
+  
+  <main id="main-content" role="main">
     {{ content_for_layout }}
-    {% section 'footer' %}
-  </body>
+  </main>
+  
+  {% section 'footer' %}
+  
+  <script>
+    // Add to cart functionality
+    function addToCart(formElement) {
+      const formData = new FormData(formElement);
+      
+      fetch(theme.routes.cart_add_url, {
+        method: 'POST',
+        body: formData
+      })
+      .then(response => response.json())
+      .then(data => {
+        // Update cart count
+        updateCartCount();
+        // Show success message
+        showNotification('Producto agregado al carrito');
+      })
+      .catch(error => {
+        console.error('Error:', error);
+        showNotification('Error al agregar el producto', 'error');
+      });
+    }
+    
+    function updateCartCount() {
+      fetch('/cart.js')
+        .then(response => response.json())
+        .then(cart => {
+          const cartCountElements = document.querySelectorAll('.cart-count');
+          cartCountElements.forEach(el => {
+            el.textContent = `(${cart.item_count})`;
+          });
+        });
+    }
+    
+    function showNotification(message, type = 'success') {
+      const notification = document.createElement('div');
+      notification.className = `notification notification-${type}`;
+      notification.textContent = message;
+      notification.style.cssText = `
+        position: fixed;
+        top: 100px;
+        right: 20px;
+        background: ${type === 'success' ? '#C9A961' : '#d32f2f'};
+        color: white;
+        padding: 15px 25px;
+        border-radius: 4px;
+        z-index: 10000;
+        animation: slideIn 0.3s ease;
+      `;
+      
+      document.body.appendChild(notification);
+      
+      setTimeout(() => {
+        notification.style.animation = 'slideOut 0.3s ease';
+        setTimeout(() => notification.remove(), 300);
+      }, 3000);
+    }
+    
+    // Update cart count on page load
+    document.addEventListener('DOMContentLoaded', updateCartCount);
+  </script>
+  
+  <style>
+    @keyframes slideIn {
+      from { transform: translateX(400px); opacity: 0; }
+      to { transform: translateX(0); opacity: 1; }
+    }
+    @keyframes slideOut {
+      from { transform: translateX(0); opacity: 1; }
+      to { transform: translateX(400px); opacity: 0; }
+    }
+  </style>
+  
+</body>
 </html>

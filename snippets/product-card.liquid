@@ -1,0 +1,145 @@
+{% comment %}
+  Renders a product card
+  
+  Accepts:
+  - product: {Object} Product object
+  - show_vendor: {Boolean} Show vendor name
+  - show_rating: {Boolean} Show product rating
+  
+  Usage:
+  {% render 'product-card', product: product %}
+{% endcomment %}
+
+<div class="product-card">
+  <a href="{{ product.url }}" class="product-card-link">
+    <div class="product-card-image">
+      {% if product.featured_image %}
+        <img 
+          src="{{ product.featured_image | img_url: '600x' }}" 
+          alt="{{ product.title | escape }}" 
+          loading="lazy"
+          width="600"
+          height="600">
+        
+        {% if product.images[1] %}
+          <img 
+            src="{{ product.images[1] | img_url: '600x' }}" 
+            alt="{{ product.title | escape }}" 
+            loading="lazy"
+            class="product-card-image-hover"
+            width="600"
+            height="600">
+        {% endif %}
+      {% else %}
+        <div class="placeholder-image">{{ product.title }}</div>
+      {% endif %}
+      
+      {% if product.compare_at_price > product.price %}
+        <span class="product-badge sale">OFERTA</span>
+      {% elsif product.available == false %}
+        <span class="product-badge sold-out">AGOTADO</span>
+      {% elsif product.tags contains 'new' %}
+        <span class="product-badge new">NUEVO</span>
+      {% endif %}
+    </div>
+    
+    <div class="product-card-info">
+      {% if show_vendor and product.vendor != blank %}
+        <p class="product-card-vendor">{{ product.vendor }}</p>
+      {% endif %}
+      
+      <h3 class="product-card-title">{{ product.title }}</h3>
+      
+      <div class="product-card-price">
+        {% if product.compare_at_price > product.price %}
+          <span class="price-compare">{{ product.compare_at_price | money }}</span>
+          <span class="price-sale">{{ product.price | money }}</span>
+        {% else %}
+          <span>{{ product.price | money }}</span>
+        {% endif %}
+      </div>
+      
+      {% if show_rating and product.metafields.reviews.rating.value %}
+        <div class="product-card-rating">
+          {% render 'product-rating', rating: product.metafields.reviews.rating.value %}
+        </div>
+      {% endif %}
+    </div>
+  </a>
+</div>
+
+<style>
+.product-card {
+  position: relative;
+}
+
+.product-card-link {
+  text-decoration: none;
+  color: inherit;
+  display: block;
+}
+
+.product-card-image {
+  position: relative;
+  overflow: hidden;
+  margin-bottom: 20px;
+}
+
+.product-card-image img {
+  width: 100%;
+  transition: var(--transition);
+}
+
+.product-card-image-hover {
+  position: absolute;
+  top: 0;
+  left: 0;
+  opacity: 0;
+}
+
+.product-card:hover .product-card-image-hover {
+  opacity: 1;
+}
+
+.product-badge {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  padding: 8px 15px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  background: var(--color-black);
+  color: var(--color-white);
+  z-index: 2;
+}
+
+.product-badge.sale {
+  background: #d32f2f;
+}
+
+.product-badge.new {
+  background: var(--color-gold);
+  color: var(--color-black);
+}
+
+.product-card-vendor {
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  color: var(--color-gray);
+  margin-bottom: 8px;
+}
+
+.product-card-title {
+  font-size: 1.2rem;
+  margin-bottom: 10px;
+}
+
+.product-card-price {
+  font-size: 1.1rem;
+  color: var(--color-gold);
+  font-weight: 600;
+}
+</style>

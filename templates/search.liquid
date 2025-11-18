@@ -1,0 +1,243 @@
+<div class="search-page">
+  <div class="container">
+    <div class="search-header">
+      <h1>Búsqueda</h1>
+      
+      <form action="{{ routes.search_url }}" method="get" role="search" class="search-form">
+        <input type="search" 
+               name="q" 
+               placeholder="Buscar productos..." 
+               value="{{ search.terms | escape }}"
+               aria-label="Buscar"
+               autofocus>
+        <button type="submit">Buscar</button>
+      </form>
+    </div>
+    
+    {% if search.performed %}
+      {% if search.results_count > 0 %}
+        <div class="search-results-header">
+          <p>{{ search.results_count }} resultado{% if search.results_count > 1 %}s{% endif %} para "{{ search.terms }}"</p>
+        </div>
+        
+        {% paginate search.results by 12 %}
+          <div class="products-grid">
+            {% for item in search.results %}
+              {% if item.object_type == 'product' %}
+                {% render 'product-card', product: item %}
+              {% elsif item.object_type == 'article' %}
+                <div class="article-card">
+                  <a href="{{ item.url }}">
+                    {% if item.image %}
+                      <img src="{{ item.image | img_url: '600x' }}" alt="{{ item.title }}" loading="lazy">
+                    {% endif %}
+                    <h3>{{ item.title }}</h3>
+                    <p>{{ item.excerpt_or_content | strip_html | truncate: 150 }}</p>
+                  </a>
+                </div>
+              {% endif %}
+            {% endfor %}
+          </div>
+          
+          {% if paginate.pages > 1 %}
+            <div class="pagination">
+              {% if paginate.previous %}
+                <a href="{{ paginate.previous.url }}">← Anterior</a>
+              {% endif %}
+              
+              {% for part in paginate.parts %}
+                {% if part.is_link %}
+                  <a href="{{ part.url }}">{{ part.title }}</a>
+                {% else %}
+                  <span class="active">{{ part.title }}</span>
+                {% endif %}
+              {% endfor %}
+              
+              {% if paginate.next %}
+                <a href="{{ paginate.next.url }}">Siguiente →</a>
+              {% endif %}
+            </div>
+          {% endif %}
+        {% endpaginate %}
+      {% else %}
+        <div class="search-no-results">
+          <p>No se encontraron resultados para "{{ search.terms }}"</p>
+          <div class="search-suggestions">
+            <h3>Sugerencias:</h3>
+            <ul>
+              <li>Verifica la ortografía de tu búsqueda</li>
+              <li>Intenta con términos más generales</li>
+              <li>Prueba con sinónimos o palabras relacionadas</li>
+            </ul>
+          </div>
+          <a href="{{ routes.all_products_collection_url }}" class="btn-primary">Ver todos los productos</a>
+        </div>
+      {% endif %}
+    {% else %}
+      <div class="search-empty">
+        <p>Ingresa un término de búsqueda para comenzar</p>
+      </div>
+    {% endif %}
+  </div>
+</div>
+
+<style>
+.search-page {
+  padding: 150px 0 100px;
+  min-height: 80vh;
+}
+
+.search-header {
+  text-align: center;
+  margin-bottom: 60px;
+}
+
+.search-header h1 {
+  font-size: 4rem;
+  margin-bottom: 40px;
+  color: var(--color-dark);
+}
+
+.search-form {
+  display: flex;
+  max-width: 700px;
+  margin: 0 auto;
+  gap: 15px;
+}
+
+.search-form input {
+  flex: 1;
+  padding: 20px 30px;
+  border: 2px solid var(--color-light-gray);
+  font-family: var(--font-body);
+  font-size: 16px;
+}
+
+.search-form input:focus {
+  outline: none;
+  border-color: var(--color-gold);
+}
+
+.search-form button {
+  padding: 20px 50px;
+  background: var(--color-black);
+  color: var(--color-white);
+  border: none;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: var(--transition);
+  font-family: var(--font-body);
+}
+
+.search-form button:hover {
+  background: var(--color-gold);
+  color: var(--color-black);
+}
+
+.search-results-header {
+  margin-bottom: 40px;
+  padding-bottom: 20px;
+  border-bottom: 2px solid var(--color-light-gray);
+}
+
+.search-results-header p {
+  font-size: 1.2rem;
+  color: var(--color-gray);
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  font-size: 13px;
+}
+
+.search-no-results,
+.search-empty {
+  text-align: center;
+  padding: 80px 0;
+}
+
+.search-no-results p,
+.search-empty p {
+  font-size: 1.5rem;
+  color: var(--color-gray);
+  margin-bottom: 40px;
+}
+
+.search-suggestions {
+  background: var(--color-cream);
+  padding: 40px;
+  margin: 40px auto;
+  max-width: 600px;
+  text-align: left;
+}
+
+.search-suggestions h3 {
+  font-size: 1.5rem;
+  margin-bottom: 20px;
+  color: var(--color-dark);
+}
+
+.search-suggestions ul {
+  list-style: none;
+  padding: 0;
+}
+
+.search-suggestions li {
+  padding: 10px 0;
+  color: var(--color-gray);
+  position: relative;
+  padding-left: 25px;
+}
+
+.search-suggestions li::before {
+  content: '→';
+  position: absolute;
+  left: 0;
+  color: var(--color-gold);
+}
+
+.article-card {
+  background: var(--color-white);
+  transition: var(--transition);
+  box-shadow: 0 5px 25px rgba(0, 0, 0, 0.06);
+}
+
+.article-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 15px 50px rgba(0, 0, 0, 0.12);
+}
+
+.article-card a {
+  text-decoration: none;
+  color: var(--color-dark);
+  display: block;
+}
+
+.article-card img {
+  width: 100%;
+  height: 300px;
+  object-fit: cover;
+}
+
+.article-card h3 {
+  padding: 25px 20px 10px;
+  font-size: 1.4rem;
+}
+
+.article-card p {
+  padding: 0 20px 25px;
+  color: var(--color-gray);
+  line-height: 1.6;
+}
+
+@media (max-width: 768px) {
+  .search-form {
+    flex-direction: column;
+  }
+  
+  .search-header h1 {
+    font-size: 2.5rem;
+  }
+}
+</style>

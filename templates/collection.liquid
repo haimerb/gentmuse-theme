@@ -1,15 +1,52 @@
 <section class="collection-page">
   <h1>{{ collection.title }}</h1>
   <p>{{ collection.description }}</p>
-  <div class="collection-products">
-    {% for product in collection.products %}
-      <div class="product-card">
-        <a href="{{ product.url }}">
-          <img src="{{ product.featured_image | img_url: 'medium' }}" alt="{{ product.title }}">
-          <h2>{{ product.title }}</h2>
-          <span>{{ product.price | money }}</span>
-        </a>
+  <div class="collection-header">
+    <div class="container">
+      <h1>{{ collection.title }}</h1>
+      {% if collection.description != blank %}
+        <p>{{ collection.description }}</p>
+      {% endif %}
+    </div>
+  </div>
+
+  <div class="container">
+    {% paginate collection.products by 12 %}
+      <div class="products-grid">
+        {% for product in collection.products %}
+          <div class="product-card">
+            <a href="{{ product.url }}">
+              {% if product.featured_image %}
+                <img src="{{ product.featured_image | img_url: '600x' }}" alt="{{ product.title }}" loading="lazy">
+              {% else %}
+                <div class="placeholder-image">{{ product.title }}</div>
+              {% endif %}
+              <h3>{{ product.title }}</h3>
+              <p class="product-price">{{ product.price | money }}</p>
+            </a>
+          </div>
+        {% endfor %}
       </div>
-    {% endfor %}
+      
+      {% if paginate.pages > 1 %}
+        <div class="pagination">
+          {% if paginate.previous %}
+            <a href="{{ paginate.previous.url }}">← Anterior</a>
+          {% endif %}
+          
+          {% for part in paginate.parts %}
+            {% if part.is_link %}
+              <a href="{{ part.url }}">{{ part.title }}</a>
+            {% else %}
+              <span class="active">{{ part.title }}</span>
+            {% endif %}
+          {% endfor %}
+          
+          {% if paginate.next %}
+            <a href="{{ paginate.next.url }}">Siguiente →</a>
+          {% endif %}
+        </div>
+      {% endif %}
+    {% endpaginate %}
   </div>
 </section>

@@ -1,4 +1,28 @@
-<section class="testimonials">
-  <h2>Lo que dicen nuestros clientes</h2>
-  {% include 'judgeme_widgets' %}
+<section class="testimonials-section">
+  <h2>{{ section.settings.heading }}</h2>
+  
+  <div class="testimonial-dots">
+    <span class="testimonial-dot active"></span>
+    <span class="testimonial-dot"></span>
+    <span class="testimonial-dot"></span>
+  </div>
 </section>
+
+{% schema %}
+{
+  "name": "Testimonials",
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Lo que dicen nuestros clientes"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Testimonials"
+    }
+  ]
+}
+{% endschema %}

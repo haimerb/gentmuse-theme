@@ -1,0 +1,58 @@
+<section class="featured-product-full">
+  <div class="featured-product-container">
+    <div class="featured-product-image">
+      {% if section.settings.product_image %}
+        <img src="{{ section.settings.product_image | img_url: '800x' }}" alt="{{ section.settings.product_title }}">
+      {% endif %}
+    </div>
+    
+    <div class="featured-product-info">
+      <h2>{{ section.settings.product_title }}</h2>
+      <p>{{ section.settings.product_description }}</p>
+      {% if section.settings.cta_text != blank %}
+        <a href="{{ section.settings.cta_link }}" class="btn-secondary">{{ section.settings.cta_text }}</a>
+      {% endif %}
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Featured Product",
+  "settings": [
+    {
+      "type": "image_picker",
+      "id": "product_image",
+      "label": "Product Image"
+    },
+    {
+      "type": "text",
+      "id": "product_title",
+      "label": "Product Title",
+      "default": "SOLID BEARD BALM"
+    },
+    {
+      "type": "textarea",
+      "id": "product_description",
+      "label": "Product Description",
+      "default": "Bálsamo moldeador, que fácilmente moldea cabellos prácticamente. Garantiza doma total e hidratación profunda, al aceitar de hueso de acéite."
+    },
+    {
+      "type": "text",
+      "id": "cta_text",
+      "label": "Button Text",
+      "default": "Agregar al carrito"
+    },
+    {
+      "type": "url",
+      "id": "cta_link",
+      "label": "Button Link"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Featured Product"
+    }
+  ]
+}
+{% endschema %}

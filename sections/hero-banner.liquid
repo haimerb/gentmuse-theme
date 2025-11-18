@@ -1,7 +1,76 @@
 <section class="hero-banner">
-  <video autoplay loop muted>
-    <source src="{{ 'gent-muse-logo-animation.mp4' | asset_url }}" type="video/mp4">
-  </video>
-  <h1>Cuidado personal elevado a ritual</h1>
-  <a href="/collections/all" class="cta-button">Descubre tu ritual</a>
+  <div class="hero-content">
+    {% if section.settings.show_video and section.settings.video_url != blank %}
+      <video class="hero-video" autoplay loop muted playsinline>
+        <source src="{{ section.settings.video_url }}" type="video/mp4">
+        Your browser does not support the video tag.
+      </video>
+    {% elsif section.settings.hero_image != blank %}
+      <img src="{{ section.settings.hero_image | img_url: '1920x' }}" alt="{{ section.settings.hero_title }}" loading="lazy">
+    {% else %}
+      <video class="hero-video" autoplay loop muted playsinline>
+        <source src="{{ 'gent-muse-logo-animation.mp4' | asset_url }}" type="video/mp4">
+      </video>
+    {% endif %}
+    
+    <div class="hero-text">
+      <h1>{{ section.settings.hero_title }}</h1>
+      <p>{{ section.settings.hero_subtitle }}</p>
+      {% if section.settings.cta_text != blank %}
+        <a href="{{ section.settings.cta_link }}" class="btn-primary">{{ section.settings.cta_text }}</a>
+      {% endif %}
+    </div>
+  </div>
 </section>
+
+{% schema %}
+{
+  "name": "Hero Banner",
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "show_video",
+      "label": "Show Video",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "video_url",
+      "label": "Video URL"
+    },
+    {
+      "type": "image_picker",
+      "id": "hero_image",
+      "label": "Hero Image (Fallback)"
+    },
+    {
+      "type": "text",
+      "id": "hero_title",
+      "label": "Title",
+      "default": "Cuidado personal elevado a ritual"
+    },
+    {
+      "type": "textarea",
+      "id": "hero_subtitle",
+      "label": "Subtitle",
+      "default": "La fusión perfecta entre lo masculino y lo femenino, entre la fuerza y la sensibilidad"
+    },
+    {
+      "type": "text",
+      "id": "cta_text",
+      "label": "Button Text",
+      "default": "Descubre tu ritual"
+    },
+    {
+      "type": "url",
+      "id": "cta_link",
+      "label": "Button Link"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Hero Banner"
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,332 @@
+<div class="container">
+  <div class="cart-page">
+    <h1>Carrito de compras</h1>
+    
+    {% if cart.item_count > 0 %}
+      <form action="{{ routes.cart_url }}" method="post" novalidate class="cart-form">
+        <div class="cart-items">
+          <div class="cart-header">
+            <div class="cart-header-product">Producto</div>
+            <div class="cart-header-price">Precio</div>
+            <div class="cart-header-quantity">Cantidad</div>
+            <div class="cart-header-total">Total</div>
+          </div>
+          
+          {% for item in cart.items %}
+            <div class="cart-item" data-line="{{ forloop.index }}">
+              <div class="cart-item-product">
+                <a href="{{ item.url }}" class="cart-item-image">
+                  {% if item.image %}
+                    <img src="{{ item.image | img_url: '200x' }}" alt="{{ item.title | escape }}" loading="lazy">
+                  {% endif %}
+                </a>
+                <div class="cart-item-details">
+                  <a href="{{ item.url }}" class="cart-item-title">{{ item.product.title }}</a>
+                  {% unless item.variant.title == 'Default Title' %}
+                    <p class="cart-item-variant">{{ item.variant.title }}</p>
+                  {% endunless %}
+                  {% if item.properties %}
+                    {% for property in item.properties %}
+                      <p class="cart-item-property">{{ property.first }}: {{ property.last }}</p>
+                    {% endfor %}
+                  {% endif %}
+                </div>
+              </div>
+              
+              <div class="cart-item-price">
+                {{ item.price | money }}
+              </div>
+              
+              <div class="cart-item-quantity">
+                <input type="number" 
+                       name="updates[]" 
+                       id="updates_{{ item.key }}" 
+                       value="{{ item.quantity }}" 
+                       min="0" 
+                       data-line="{{ forloop.index }}"
+                       aria-label="Cantidad para {{ item.title }}">
+                <button type="button" class="cart-item-remove" data-line="{{ forloop.index }}">Eliminar</button>
+              </div>
+              
+              <div class="cart-item-total">
+                {{ item.line_price | money }}
+              </div>
+            </div>
+          {% endfor %}
+        </div>
+        
+        <div class="cart-footer">
+          <div class="cart-notes">
+            <label for="cart-note">Notas del pedido</label>
+            <textarea name="note" id="cart-note" placeholder="Instrucciones especiales para tu pedido">{{ cart.note }}</textarea>
+          </div>
+          
+          <div class="cart-summary">
+            <div class="cart-subtotal">
+              <span>Subtotal</span>
+              <span class="cart-subtotal-price">{{ cart.total_price | money }}</span>
+            </div>
+            
+            <p class="cart-shipping-notice">Los gastos de envío se calculan en el checkout</p>
+            
+            <button type="submit" name="update" class="btn-update-cart">Actualizar carrito</button>
+            <button type="submit" name="checkout" class="btn-checkout">Finalizar compra</button>
+            
+            <a href="{{ routes.all_products_collection_url }}" class="continue-shopping">← Continuar comprando</a>
+          </div>
+        </div>
+      </form>
+    {% else %}
+      <div class="cart-empty">
+        <p>Tu carrito está vacío</p>
+        <a href="{{ routes.all_products_collection_url }}" class="btn-primary">Explorar productos</a>
+      </div>
+    {% endif %}
+  </div>
+</div>
+
+<style>
+.cart-page {
+  padding: 150px 0 100px;
+}
+
+.cart-page h1 {
+  text-align: center;
+  margin-bottom: 60px;
+  font-size: 3rem;
+}
+
+.cart-items {
+  margin-bottom: 60px;
+}
+
+.cart-header {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr 1fr;
+  gap: 20px;
+  padding: 20px;
+  background: var(--color-cream);
+  font-weight: 600;
+  text-transform: uppercase;
+  font-size: 12px;
+  letter-spacing: 1.5px;
+}
+
+.cart-item {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr 1fr;
+  gap: 20px;
+  padding: 30px 20px;
+  border-bottom: 1px solid var(--color-light-gray);
+  align-items: center;
+}
+
+.cart-item-product {
+  display: flex;
+  gap: 20px;
+}
+
+.cart-item-image {
+  flex-shrink: 0;
+}
+
+.cart-item-image img {
+  width: 100px;
+  height: 100px;
+  object-fit: cover;
+}
+
+.cart-item-title {
+  font-size: 1.1rem;
+  color: var(--color-dark);
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.cart-item-title:hover {
+  color: var(--color-gold);
+}
+
+.cart-item-variant,
+.cart-item-property {
+  font-size: 13px;
+  color: var(--color-gray);
+  margin-top: 5px;
+}
+
+.cart-item-quantity input {
+  width: 70px;
+  padding: 10px;
+  border: 2px solid var(--color-light-gray);
+  text-align: center;
+  margin-bottom: 10px;
+}
+
+.cart-item-remove {
+  background: none;
+  border: none;
+  color: var(--color-gray);
+  text-decoration: underline;
+  cursor: pointer;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.cart-item-remove:hover {
+  color: #d32f2f;
+}
+
+.cart-item-price,
+.cart-item-total {
+  font-size: 1.1rem;
+  color: var(--color-gold);
+  font-weight: 600;
+}
+
+.cart-footer {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 60px;
+  margin-top: 60px;
+}
+
+.cart-notes label {
+  display: block;
+  margin-bottom: 15px;
+  font-size: 13px;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+}
+
+.cart-notes textarea {
+  width: 100%;
+  min-height: 150px;
+  padding: 15px;
+  border: 2px solid var(--color-light-gray);
+  font-family: var(--font-body);
+  font-size: 14px;
+  resize: vertical;
+}
+
+.cart-summary {
+  background: var(--color-cream);
+  padding: 40px;
+}
+
+.cart-subtotal {
+  display: flex;
+  justify-content: space-between;
+  font-size: 1.5rem;
+  margin-bottom: 15px;
+  padding-bottom: 20px;
+  border-bottom: 2px solid var(--color-light-gray);
+}
+
+.cart-subtotal-price {
+  color: var(--color-gold);
+  font-weight: 700;
+}
+
+.cart-shipping-notice {
+  font-size: 13px;
+  color: var(--color-gray);
+  margin-bottom: 30px;
+}
+
+.btn-update-cart,
+.btn-checkout {
+  width: 100%;
+  padding: 18px;
+  border: 2px solid var(--color-black);
+  font-size: 13px;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: var(--transition);
+  font-family: var(--font-body);
+  margin-bottom: 15px;
+}
+
+.btn-update-cart {
+  background: transparent;
+  color: var(--color-black);
+}
+
+.btn-update-cart:hover {
+  background: var(--color-black);
+  color: var(--color-white);
+}
+
+.btn-checkout {
+  background: var(--color-black);
+  color: var(--color-white);
+}
+
+.btn-checkout:hover {
+  background: var(--color-gold);
+  border-color: var(--color-gold);
+  color: var(--color-black);
+}
+
+.continue-shopping {
+  display: block;
+  text-align: center;
+  margin-top: 20px;
+  color: var(--color-gray);
+  text-decoration: none;
+  font-size: 13px;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+}
+
+.continue-shopping:hover {
+  color: var(--color-gold);
+}
+
+.cart-empty {
+  text-align: center;
+  padding: 100px 0;
+}
+
+.cart-empty p {
+  font-size: 1.5rem;
+  margin-bottom: 40px;
+  color: var(--color-gray);
+}
+
+@media (max-width: 768px) {
+  .cart-header {
+    display: none;
+  }
+  
+  .cart-item {
+    grid-template-columns: 1fr;
+    gap: 15px;
+  }
+  
+  .cart-footer {
+    grid-template-columns: 1fr;
+  }
+}
+</style>
+
+<script>
+document.querySelectorAll('.cart-item-quantity input').forEach(input => {
+  input.addEventListener('change', function() {
+    this.form.submit();
+  });
+});
+
+document.querySelectorAll('.cart-item-remove').forEach(button => {
+  button.addEventListener('click', function() {
+    const line = this.getAttribute('data-line');
+    const input = document.querySelector(`input[data-line="${line}"]`);
+    if (input) {
+      input.value = 0;
+      input.form.submit();
+    }
+  });
+});
+</script>
