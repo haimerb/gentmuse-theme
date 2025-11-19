@@ -1,15 +1,15 @@
 <div class="container">
   <div class="cart-page">
-    <h1>Carrito de compras</h1>
+    <h1>{{ 'cart.general.title' | t }}</h1>
     
     {% if cart.item_count > 0 %}
       <form action="{{ routes.cart_url }}" method="post" novalidate class="cart-form">
         <div class="cart-items">
           <div class="cart-header">
-            <div class="cart-header-product">Producto</div>
-            <div class="cart-header-price">Precio</div>
-            <div class="cart-header-quantity">Cantidad</div>
-            <div class="cart-header-total">Total</div>
+            <div class="cart-header-product">{{ 'products.product.variant' | t }}</div>
+            <div class="cart-header-price">{{ 'products.product.price' | t }}</div>
+            <div class="cart-header-quantity">{{ 'cart.general.quantity' | t }}</div>
+            <div class="cart-header-total">{{ 'cart.general.total' | t }}</div>
           </div>
           
           {% for item in cart.items %}
@@ -44,8 +44,8 @@
                        value="{{ item.quantity }}" 
                        min="0" 
                        data-line="{{ forloop.index }}"
-                       aria-label="Cantidad para {{ item.title }}">
-                <button type="button" class="cart-item-remove" data-line="{{ forloop.index }}">Eliminar</button>
+                       aria-label="{{ 'cart.general.quantity' | t }} {{ item.title }}">
+                <button type="button" class="cart-item-remove" data-line="{{ forloop.index }}">{{ 'cart.general.remove' | t }}</button>
               </div>
               
               <div class="cart-item-total">
@@ -57,29 +57,29 @@
         
         <div class="cart-footer">
           <div class="cart-notes">
-            <label for="cart-note">Notas del pedido</label>
-            <textarea name="note" id="cart-note" placeholder="Instrucciones especiales para tu pedido">{{ cart.note }}</textarea>
+            <label for="cart-note">{{ 'cart.general.note' | t }}</label>
+            <textarea name="note" id="cart-note" placeholder="{{ 'cart.general.note_placeholder' | t }}">{{ cart.note }}</textarea>
           </div>
           
           <div class="cart-summary">
             <div class="cart-subtotal">
-              <span>Subtotal</span>
+              <span>{{ 'cart.general.subtotal' | t }}</span>
               <span class="cart-subtotal-price">{{ cart.total_price | money }}</span>
             </div>
             
-            <p class="cart-shipping-notice">Los gastos de envío se calculan en el checkout</p>
+            <p class="cart-shipping-notice">{{ 'cart.general.shipping_at_checkout' | t }}</p>
             
-            <button type="submit" name="update" class="btn-update-cart">Actualizar carrito</button>
-            <button type="submit" name="checkout" class="btn-checkout">Finalizar compra</button>
+            <button type="submit" name="update" class="btn-update-cart">{{ 'cart.general.update' | t }}</button>
+            <button type="submit" name="checkout" class="btn-checkout">{{ 'cart.general.checkout' | t }}</button>
             
-            <a href="{{ routes.all_products_collection_url }}" class="continue-shopping">← Continuar comprando</a>
+            <a href="{{ routes.all_products_collection_url }}" class="continue-shopping">← {{ 'cart.general.continue_shopping' | t }}</a>
           </div>
         </div>
       </form>
     {% else %}
       <div class="cart-empty">
-        <p>Tu carrito está vacío</p>
-        <a href="{{ routes.all_products_collection_url }}" class="btn-primary">Explorar productos</a>
+        <p>{{ 'cart.general.empty' | t }}</p>
+        <a href="{{ routes.all_products_collection_url }}" class="btn-primary">{{ 'cart.general.explore_products' | t }}</a>
       </div>
     {% endif %}
   </div>

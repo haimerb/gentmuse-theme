@@ -1,0 +1,185 @@
+{
+  "general": {
+    "meta": {
+      "page": "Página {{ page }}"
+    },
+    "breadcrumbs": {
+      "home": "Inicio",
+      "back": "Volver"
+    },
+    "search": {
+      "placeholder": "Buscar productos...",
+      "submit": "Buscar",
+      "no_results": "No se encontraron resultados para",
+      "results_count": {
+        "one": "{{ count }} resultado",
+        "other": "{{ count }} resultados"
+      }
+    },
+    "currency": {
+      "dropdown_label": "Moneda"
+    },
+    "language": {
+      "dropdown_label": "Idioma"
+    }
+  },
+  "header": {
+    "menu": "Menú",
+    "search": "Buscar",
+    "account": "Cuenta",
+    "cart": "Carrito",
+    "items_count": "({{ count }})"
+  },
+  "products": {
+    "product": {
+      "add_to_cart": "Agregar al carrito",
+      "sold_out": "Agotado",
+      "unavailable": "No disponible",
+      "quantity": "Cantidad",
+      "price": "Precio",
+      "variant": "Variante",
+      "view_full_details": "Ver detalles completos",
+      "include_taxes": "Impuesto incluido.",
+      "shipping_policy_html": "<a href=\"{{ link }}\">Envío</a> calculado al pagar.",
+      "low_stock": "¡Solo quedan {{ count }}!",
+      "ingredients": "Ingredientes",
+      "benefits": "Beneficios",
+      "usage": "Modo de uso"
+    },
+    "general": {
+      "from_text_html": "Desde {{ price }}",
+      "sale_price": "Precio de oferta",
+      "regular_price": "Precio regular"
+    }
+  },
+  "collections": {
+    "general": {
+      "title": "Colecciones",
+      "items_count": {
+        "one": "{{ count }} producto",
+        "other": "{{ count }} productos"
+      },
+      "no_products": "No hay productos en esta colección",
+      "explore": "Explorar colección"
+    },
+    "filters": {
+      "title": "Filtrar por",
+      "clear_all": "Limpiar todo",
+      "apply": "Aplicar",
+      "from": "Desde",
+      "to": "Hasta"
+    },
+    "sorting": {
+      "title": "Ordenar por",
+      "featured": "Destacados",
+      "best_selling": "Más vendidos",
+      "price_ascending": "Precio: menor a mayor",
+      "price_descending": "Precio: mayor a menor",
+      "date_ascending": "Fecha: antiguo a nuevo",
+      "date_descending": "Fecha: nuevo a antiguo"
+    }
+  },
+  "cart": {
+    "general": {
+      "title": "Carrito de compras",
+      "empty": "Tu carrito está vacío",
+      "continue_shopping": "Continuar comprando",
+      "explore_products": "Explorar productos",
+      "subtotal": "Subtotal",
+      "shipping": "Envío",
+      "shipping_at_checkout": "Calculado al pagar",
+      "taxes": "Impuestos",
+      "total": "Total",
+      "update": "Actualizar carrito",
+      "checkout": "Finalizar compra",
+      "note": "Notas del pedido",
+      "note_placeholder": "Instrucciones especiales para tu pedido",
+      "remove": "Eliminar",
+      "quantity": "Cantidad"
+    }
+  },
+  "customer": {
+    "account": {
+      "title": "Mi cuenta",
+      "logout": "Cerrar sesión"
+    },
+    "login": {
+      "title": "Iniciar sesión",
+      "email": "Correo electrónico",
+      "password": "Contraseña",
+      "forgot_password": "¿Olvidaste tu contraseña?",
+      "sign_in": "Iniciar sesión",
+      "guest_title": "Continuar como invitado",
+      "guest_continue": "Continuar",
+      "create_account": "Crear cuenta"
+    },
+    "register": {
+      "title": "Crear cuenta",
+      "first_name": "Nombre",
+      "last_name": "Apellido",
+      "email": "Correo electrónico",
+      "password": "Contraseña",
+      "submit": "Crear"
+    }
+  },
+  "contact": {
+    "form": {
+      "name": "Nombre",
+      "email": "Correo electrónico",
+      "phone": "Teléfono",
+      "message": "Mensaje",
+      "send": "Enviar mensaje",
+      "post_success": "Gracias por contactarnos. Te responderemos pronto.",
+      "required_fields": "* Campos requeridos"
+    }
+  },
+  "blog": {
+    "article": {
+      "read_more": "Leer más",
+      "tags": "Etiquetas",
+      "by_author": "Por {{ author }}",
+      "on_date": "el {{ date }}"
+    },
+    "comments": {
+      "title": "Comentarios",
+      "count": {
+        "one": "{{ count }} comentario",
+        "other": "{{ count }} comentarios"
+      },
+      "success": "Tu comentario fue publicado exitosamente. ¡Gracias!",
+      "name": "Nombre",
+      "email": "Correo electrónico",
+      "message": "Mensaje",
+      "post": "Publicar comentario"
+    }
+  },
+  "newsletter": {
+    "title": "Suscríbete al Newsletter",
+    "subtitle": "Recibe ofertas exclusivas y las últimas novedades",
+    "email_placeholder": "Tu correo electrónico",
+    "submit": "Suscribirse",
+    "success": "¡Gracias por suscribirte!"
+  },
+  "footer": {
+    "social": {
+      "title": "Síguenos"
+    },
+    "newsletter": {
+      "title": "Únete al Ritual"
+    }
+  },
+  "404": {
+    "title": "404",
+    "subtitle": "Página no encontrada",
+    "text": "Lo sentimos, la página que buscas no existe o ha sido movida.",
+    "back_home": "Volver al inicio",
+    "explore_products": "Explorar productos",
+    "search_placeholder": "Buscar productos..."
+  },
+  "accessibility": {
+    "skip_to_text": "Ir al contenido",
+    "loading": "Cargando...",
+    "close": "Cerrar",
+    "unit_price_separator": "por"
+  }
+}

@@ -26,7 +26,7 @@
         {% if product.compare_at_price > product.price %}
           <span class="price-compare">{{ product.compare_at_price | money }}</span>
           <span class="price-sale">{{ product.price | money }}</span>
-          <span class="price-badge">OFERTA</span>
+          <span class="price-badge">{{ 'products.general.sale_price' | t | upcase }}</span>
         {% else %}
           {{ product.price | money }}
         {% endif %}
@@ -58,22 +58,24 @@
         {% endunless %}
         
         <div class="product-quantity">
-          <label for="quantity">Cantidad</label>
+          <label for="quantity">{{ 'products.product.quantity' | t }}</label>
           <input type="number" id="quantity" name="quantity" value="1" min="1">
         </div>
         
         <button type="submit" name="add" class="btn-add-to-cart" {% unless product.available %}disabled{% endunless %}>
-          {% if product.available %}
-            {{ 'products.product.add_to_cart' | t }}
-          {% else %}
-            {{ 'products.product.sold_out' | t }}
-          {% endif %}
+          <span>
+            {% if product.available %}
+              {{ 'products.product.add_to_cart' | t }}
+            {% else %}
+              {{ 'products.product.sold_out' | t }}
+            {% endif %}
+          </span>
         </button>
         
         {% if product.available %}
           <div class="product-inventory">
             {% if product.selected_or_first_available_variant.inventory_quantity <= 5 and product.selected_or_first_available_variant.inventory_quantity > 0 %}
-              <span class="low-stock">¡Solo quedan {{ product.selected_or_first_available_variant.inventory_quantity }}!</span>
+              <span class="low-stock">{{ 'products.product.low_stock' | t: count: product.selected_or_first_available_variant.inventory_quantity }}</span>
             {% endif %}
           </div>
         {% endif %}
@@ -81,21 +83,21 @@
       
       {% if product.metafields.custom.ingredients %}
         <div class="product-details">
-          <h3>Ingredientes</h3>
+          <h3>{{ 'products.product.ingredients' | t }}</h3>
           <p>{{ product.metafields.custom.ingredients }}</p>
         </div>
       {% endif %}
       
       {% if product.metafields.custom.benefits %}
         <div class="product-details">
-          <h3>Beneficios</h3>
+          <h3>{{ 'products.product.benefits' | t }}</h3>
           <p>{{ product.metafields.custom.benefits }}</p>
         </div>
       {% endif %}
       
       {% if product.metafields.custom.usage %}
         <div class="product-details">
-          <h3>Modo de uso</h3>
+          <h3>{{ 'products.product.usage' | t }}</h3>
           <p>{{ product.metafields.custom.usage }}</p>
         </div>
       {% endif %}
@@ -104,7 +106,7 @@
   
   {% if product.tags contains 'featured' %}
     <div class="related-products">
-      <h2>También te puede interesar</h2>
+      <h2>{{ 'collections.general.explore' | t }}</h2>
       <div class="products-grid">
         {% assign related_products = collections.all.products | where: "tags", "featured" | limit: 4 %}
         {% for related_product in related_products %}
