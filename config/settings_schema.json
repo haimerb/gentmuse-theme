@@ -128,5 +128,28 @@
         "label": "Pinterest"
       }
     ]
+  },
+  {
+    "name": "Language & Localization",
+    "settings": [
+      {
+        "type": "header",
+        "content": "Multi-language settings"
+      },
+      {
+        "type": "checkbox",
+        "id": "enable_language_selector",
+        "label": "Enable language selector in header",
+        "default": true,
+        "info": "Shows a language selector if multiple languages are available"
+      },
+      {
+        "type": "checkbox",
+        "id": "enable_currency_selector",
+        "label": "Enable currency selector",
+        "default": true,
+        "info": "Shows a currency selector for multi-currency stores"
+      }
+    ]
   }
 ]

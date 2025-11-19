@@ -1,0 +1,185 @@
+{
+  "general": {
+    "meta": {
+      "page": "Page {{ page }}"
+    },
+    "breadcrumbs": {
+      "home": "Home",
+      "back": "Back"
+    },
+    "search": {
+      "placeholder": "Search products...",
+      "submit": "Search",
+      "no_results": "No results found for",
+      "results_count": {
+        "one": "{{ count }} result",
+        "other": "{{ count }} results"
+      }
+    },
+    "currency": {
+      "dropdown_label": "Currency"
+    },
+    "language": {
+      "dropdown_label": "Language"
+    }
+  },
+  "header": {
+    "menu": "Menu",
+    "search": "Search",
+    "account": "Account",
+    "cart": "Cart",
+    "items_count": "({{ count }})"
+  },
+  "products": {
+    "product": {
+      "add_to_cart": "Add to cart",
+      "sold_out": "Sold out",
+      "unavailable": "Unavailable",
+      "quantity": "Quantity",
+      "price": "Price",
+      "variant": "Variant",
+      "view_full_details": "View full details",
+      "include_taxes": "Tax included.",
+      "shipping_policy_html": "<a href=\"{{ link }}\">Shipping</a> calculated at checkout.",
+      "low_stock": "Only {{ count }} left!",
+      "ingredients": "Ingredients",
+      "benefits": "Benefits",
+      "usage": "How to use"
+    },
+    "general": {
+      "from_text_html": "From {{ price }}",
+      "sale_price": "Sale price",
+      "regular_price": "Regular price"
+    }
+  },
+  "collections": {
+    "general": {
+      "title": "Collections",
+      "items_count": {
+        "one": "{{ count }} product",
+        "other": "{{ count }} products"
+      },
+      "no_products": "No products in this collection",
+      "explore": "Explore collection"
+    },
+    "filters": {
+      "title": "Filter by",
+      "clear_all": "Clear all",
+      "apply": "Apply",
+      "from": "From",
+      "to": "To"
+    },
+    "sorting": {
+      "title": "Sort by",
+      "featured": "Featured",
+      "best_selling": "Best selling",
+      "price_ascending": "Price: Low to High",
+      "price_descending": "Price: High to Low",
+      "date_ascending": "Date: Old to New",
+      "date_descending": "Date: New to Old"
+    }
+  },
+  "cart": {
+    "general": {
+      "title": "Shopping Cart",
+      "empty": "Your cart is empty",
+      "continue_shopping": "Continue shopping",
+      "explore_products": "Explore products",
+      "subtotal": "Subtotal",
+      "shipping": "Shipping",
+      "shipping_at_checkout": "Calculated at checkout",
+      "taxes": "Taxes",
+      "total": "Total",
+      "update": "Update cart",
+      "checkout": "Checkout",
+      "note": "Order notes",
+      "note_placeholder": "Special instructions for your order",
+      "remove": "Remove",
+      "quantity": "Quantity"
+    }
+  },
+  "customer": {
+    "account": {
+      "title": "My Account",
+      "logout": "Log out"
+    },
+    "login": {
+      "title": "Login",
+      "email": "Email",
+      "password": "Password",
+      "forgot_password": "Forgot your password?",
+      "sign_in": "Sign in",
+      "guest_title": "Continue as guest",
+      "guest_continue": "Continue",
+      "create_account": "Create account"
+    },
+    "register": {
+      "title": "Create Account",
+      "first_name": "First name",
+      "last_name": "Last name",
+      "email": "Email",
+      "password": "Password",
+      "submit": "Create"
+    }
+  },
+  "contact": {
+    "form": {
+      "name": "Name",
+      "email": "Email",
+      "phone": "Phone",
+      "message": "Message",
+      "send": "Send message",
+      "post_success": "Thanks for contacting us. We'll get back to you soon.",
+      "required_fields": "* Required fields"
+    }
+  },
+  "blog": {
+    "article": {
+      "read_more": "Read more",
+      "tags": "Tags",
+      "by_author": "By {{ author }}",
+      "on_date": "on {{ date }}"
+    },
+    "comments": {
+      "title": "Comments",
+      "count": {
+        "one": "{{ count }} comment",
+        "other": "{{ count }} comments"
+      },
+      "success": "Your comment was posted successfully! Thank you!",
+      "name": "Name",
+      "email": "Email",
+      "message": "Message",
+      "post": "Post comment"
+    }
+  },
+  "newsletter": {
+    "title": "Subscribe to Newsletter",
+    "subtitle": "Receive exclusive offers and latest news",
+    "email_placeholder": "Your email",
+    "submit": "Subscribe",
+    "success": "Thank you for subscribing!"
+  },
+  "footer": {
+    "social": {
+      "title": "Follow us"
+    },
+    "newsletter": {
+      "title": "Join the Ritual"
+    }
+  },
+  "404": {
+    "title": "404",
+    "subtitle": "Page not found",
+    "text": "Sorry, the page you're looking for doesn't exist or has been moved.",
+    "back_home": "Back to home",
+    "explore_products": "Explore products",
+    "search_placeholder": "Search products..."
+  },
+  "accessibility": {
+    "skip_to_text": "Skip to content",
+    "loading": "Loading...",
+    "close": "Close",
+    "unit_price_separator": "per"
+  }
+}
