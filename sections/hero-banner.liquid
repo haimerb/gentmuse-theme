@@ -14,6 +14,9 @@
     {% endif %}
     
     <div class="hero-text">
+      {% if section.settings.hero_eyebrow != blank %}
+        <span class="hero-eyebrow">{{ section.settings.hero_eyebrow }}</span>
+      {% endif %}
       <h1>{{ section.settings.hero_title }}</h1>
       <p>{{ section.settings.hero_subtitle }}</p>
       {% if section.settings.cta_text != blank %}
@@ -65,6 +68,12 @@
       "type": "url",
       "id": "cta_link",
       "label": "Button Link"
+    },
+    {
+      "type": "text",
+      "id": "hero_eyebrow",
+      "label": "Eyebrow",
+      "default": "Gent & Muse Collection"
     }
   ],
   "presets": [
