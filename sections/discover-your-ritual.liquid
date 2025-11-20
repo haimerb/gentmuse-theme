@@ -1,0 +1,226 @@
+<section class="ritual-section reveal-on-scroll">
+  <div class="container">
+    <div class="section-header">
+      {% if section.settings.eyebrow != blank %}
+        <span class="section-eyebrow">{{ section.settings.eyebrow }}</span>
+      {% endif %}
+      <h2 class="section-title">{{ section.settings.title }}</h2>
+      {% if section.settings.description != blank %}
+        <p class="section-description">{{ section.settings.description }}</p>
+      {% endif %}
+    </div>
+
+    <div class="ritual-grid">
+      {% for block in section.blocks %}
+        <article class="ritual-card reveal-on-scroll" {{ block.shopify_attributes }}>
+          {% if block.settings.icon != blank %}
+            <div class="ritual-icon">
+              <img src="{{ block.settings.icon | img_url: '120x' }}" alt="{{ block.settings.heading }}">
+            </div>
+          {% endif %}
+          {% if block.settings.step_label != blank %}
+            <span class="ritual-step">{{ block.settings.step_label }}</span>
+          {% endif %}
+          <h3>{{ block.settings.heading }}</h3>
+          <p>{{ block.settings.copy }}</p>
+          {% if block.settings.link_text != blank %}
+            <a class="ritual-link" href="{{ block.settings.link_url | default: routes.root_url }}">
+              {{ block.settings.link_text }}
+              <span aria-hidden="true">→</span>
+            </a>
+          {% endif %}
+        </article>
+      {% endfor %}
+    </div>
+    
+    {% if section.settings.cta_text != blank %}
+      <div style="text-align: center; margin-top: var(--space-element);">
+        <a class="btn-outline" href="{{ section.settings.cta_link | default: routes.all_products_collection_url }}">
+          {{ section.settings.cta_text }}
+        </a>
+      </div>
+    {% endif %}
+  </div>
+</section>
+
+<style>
+.ritual-section {
+  background: linear-gradient(135deg, var(--color-white) 0%, var(--color-cream) 100%);
+}
+
+.ritual-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 40px;
+  margin-top: var(--space-content);
+}
+
+.ritual-card {
+  padding: 48px 40px;
+  background: var(--color-white);
+  box-shadow: var(--shadow-soft);
+  transition: var(--transition-base);
+  border: 1px solid rgba(0, 0, 0, 0.04);
+}
+
+.ritual-card:hover {
+  transform: translateY(-8px);
+  box-shadow: var(--shadow-medium);
+  border-color: var(--color-gold-dim);
+}
+
+.ritual-icon {
+  margin-bottom: 24px;
+}
+
+.ritual-icon img {
+  width: 64px;
+  height: 64px;
+  object-fit: contain;
+  filter: grayscale(100%) opacity(0.7);
+  transition: var(--transition-fast);
+}
+
+.ritual-card:hover .ritual-icon img {
+  filter: grayscale(0%) opacity(1);
+}
+
+.ritual-step {
+  display: inline-block;
+  font-size: 11px;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--color-gold);
+  margin-bottom: 16px;
+  font-weight: 500;
+}
+
+.ritual-card h3 {
+  font-size: 1.8rem;
+  margin-bottom: 20px;
+  font-style: italic;
+}
+
+.ritual-card p {
+  color: var(--color-gray);
+  line-height: 1.8;
+  margin-bottom: 24px;
+}
+
+.ritual-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--color-dark);
+  text-decoration: none;
+  font-size: 13px;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  font-weight: 500;
+  transition: var(--transition-fast);
+}
+
+.ritual-link:hover {
+  color: var(--color-gold);
+  transform: translateX(4px);
+}
+
+@media (max-width: 768px) {
+  .ritual-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .ritual-card {
+    padding: 32px 24px;
+  }
+}
+</style>
+
+{% schema %}
+{
+  "name": "Discover Your Ritual",
+  "settings": [
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow",
+      "default": "Your Personal Journey"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Title",
+      "default": "Discover Your Ritual"
+    },
+    {
+      "type": "textarea",
+      "id": "description",
+      "label": "Description",
+      "default": "Every gesture becomes intentional. Every texture tells a story. Curate your personal ritual with formulations that honor both strength and sensitivity."
+    },
+    {
+      "type": "text",
+      "id": "cta_text",
+      "label": "CTA text",
+      "default": "Explore Our Collection"
+    },
+    {
+      "type": "url",
+      "id": "cta_link",
+      "label": "CTA link"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "ritual_step",
+      "name": "Ritual Card",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "icon",
+          "label": "Icon"
+        },
+        {
+          "type": "text",
+          "id": "step_label",
+          "label": "Step label",
+          "default": "Step I"
+        },
+        {
+          "type": "text",
+          "id": "heading",
+          "label": "Heading",
+          "default": "Cleanse"
+        },
+        {
+          "type": "textarea",
+          "id": "copy",
+          "label": "Copy",
+          "default": "Begin with minimal-touch formulations that preserve the skin's natural balance while awakening the senses."
+        },
+        {
+          "type": "text",
+          "id": "link_text",
+          "label": "Link text",
+          "default": "View Products"
+        },
+        {
+          "type": "url",
+          "id": "link_url",
+          "label": "Link URL"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Discover Your Ritual",
+      "blocks": [
+        { "type": "ritual_step" },
+        { "type": "ritual_step" },
+        { "type": "ritual_step" }
+      ]
+    }
+  ]
+}
+{% endschema %}
