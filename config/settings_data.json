@@ -1,0 +1,51 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "current": {
+    "sections": {
+      "header": {
+        "type": "header",
+        "settings": {
+          "menu": "main-menu",
+          "enable_language_selector": true
+        }
+      },
+      "hero-banner": {
+        "type": "hero-banner",
+        "settings": {
+          "show_video": true,
+          "video_url": "",
+          "hero_title": "Personal care elevated to ritual",
+          "hero_subtitle": "The perfect fusion between strength and sensitivity, where classic rituals meet contemporary design.",
+          "cta_text": "Discover the ritual",
+          "cta_link": "",
+          "hero_eyebrow": "Gent & Muse Collection"
+        }
+      },
+      "featured-collections": {
+        "type": "featured-collections",
+        "settings": {
+          "heading": "Explore Our Collections"
+        }
+      },
+      "footer": {
+        "type": "footer",
+        "settings": {
+          "footer_title": "Gent & Muse",
+          "footer_text": "We transform everyday routines into conscious, aesthetic, and emotional rituals. The perfect fusion of masculinity and femininity, between strength and sensitivity.",
+          "footer_menu": "footer",
+          "instagram_url": "https://www.instagram.com/gentandmuse/",
+          "facebook_url": ""
+        }
+      }
+    },
+    "content_for_index": []
+  }
+}
