@@ -66,6 +66,15 @@
       {% endif %}
     </div>
   </a>
+  
+  {% if product.available %}
+    <button class="btn btn--ghost quick-add-btn" 
+            data-product-id="{{ product.id }}" 
+            data-variant-id="{{ product.selected_or_first_available_variant.id }}" 
+            onclick="quickAddToCart(event, this)">
+      Add to Cart
+    </button>
+  {% endif %}
 </div>
 
 <style>
@@ -142,4 +151,90 @@
   color: var(--color-gold);
   font-weight: 600;
 }
+
+.quick-add-btn {
+  width: 100%;
+  margin-top: var(--space-s);
+  padding: var(--space-s) var(--space-m);
+  opacity: 0;
+  transform: translateY(10px);
+  transition: all 0.3s var(--ease-smooth);
+}
+
+.product-card:hover .quick-add-btn {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.quick-add-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
 </style>
+
+<script>
+function quickAddToCart(event, button) {
+  event.preventDefault();
+  event.stopPropagation();
+  
+  const variantId = button.getAttribute('data-variant-id');
+  const originalText = button.textContent;
+  
+  button.disabled = true;
+  button.textContent = 'Adding...';
+  
+  fetch('/cart/add.js', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      id: variantId,
+      quantity: 1
+    })
+  })
+  .then(response => {
+    if (!response.ok) {
+      throw new Error('Failed to add to cart');
+    }
+    return response.json();
+  })
+  .then(data => {
+    console.log('Quick add success:', data);
+    button.textContent = 'Added ✓';
+    
+    // Update cart count
+    fetch('/cart.js')
+      .then(response => response.json())
+      .then(cart => {
+        const cartCountElements = document.querySelectorAll('.cart-count');
+        cartCountElements.forEach(el => {
+          el.textContent = `(${cart.item_count})`;
+        });
+      });
+    
+    // Show notification
+    if (typeof showNotification === 'function') {
+      showNotification('Product added to cart', 'success');
+    }
+    
+    setTimeout(() => {
+      button.textContent = originalText;
+      button.disabled = false;
+    }, 2000);
+  })
+  .catch(error => {
+    console.error('Quick add error:', error);
+    button.textContent = 'Error';
+    
+    if (typeof showNotification === 'function') {
+      showNotification('Unable to add product', 'error');
+    }
+    
+    setTimeout(() => {
+      button.textContent = originalText;
+      button.disabled = false;
+    }, 2000);
+  });
+}
+</script>

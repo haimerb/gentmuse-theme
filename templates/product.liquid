@@ -36,8 +36,8 @@
         {{ product.description }}
       </div>
       
-      {% form 'product', product, id: 'product-form', onsubmit: 'addToCart(this); return false;' %}
-        <input type="hidden" name="id" value="{{ product.selected_or_first_available_variant.id }}">
+      {% form 'product', product, id: 'product-form', onsubmit: 'return addToCart(this)' %}
+        <input type="hidden" name="id" value="{{ product.selected_or_first_available_variant.id }}" id="product-variant-id">
         
         {% unless product.has_only_default_variant %}
           <div class="product-variants">
@@ -48,7 +48,8 @@
                   value="{{ variant.id }}" 
                   {% unless variant.available %}disabled{% endunless %}
                   {% if variant == product.selected_or_first_available_variant %}selected{% endif %}
-                  data-price="{{ variant.price | money }}">
+                  data-price="{{ variant.price | money }}"
+                  data-available="{{ variant.available }}">
                   {{ variant.title }} - {{ variant.price | money }}
                   {% unless variant.available %} ({{ 'products.product.sold_out' | t }}){% endunless %}
                 </option>
@@ -62,8 +63,12 @@
           <input type="number" id="quantity" name="quantity" value="1" min="1">
         </div>
         
-        <button type="submit" name="add" class="btn-add-to-cart" {% unless product.available %}disabled{% endunless %}>
-          <span>
+        <button type="submit" 
+                name="add" 
+                id="add-to-cart-button"
+                class="btn btn--primary"
+                {% unless product.available %}disabled{% endunless %}>
+          <span class="btn-text">
             {% if product.available %}
               {{ 'products.product.add_to_cart' | t }}
             {% else %}
@@ -74,8 +79,14 @@
         
         {% if product.available %}
           <div class="product-inventory">
-            {% if product.selected_or_first_available_variant.inventory_quantity <= 5 and product.selected_or_first_available_variant.inventory_quantity > 0 %}
-              <span class="low-stock">{{ 'products.product.low_stock' | t: count: product.selected_or_first_available_variant.inventory_quantity }}</span>
+            {% if product.selected_or_first_available_variant.inventory_management == 'shopify' %}
+              {% if product.selected_or_first_available_variant.inventory_quantity > 0 and product.selected_or_first_available_variant.inventory_quantity <= 10 %}
+                <span class="low-stock">{{ 'products.product.low_stock' | t: count: product.selected_or_first_available_variant.inventory_quantity }}</span>
+              {% elsif product.selected_or_first_available_variant.inventory_quantity > 0 %}
+                <span class="in-stock">✓ In Stock</span>
+              {% endif %}
+            {% else %}
+              <span class="in-stock">✓ Available</span>
             {% endif %}
           </div>
         {% endif %}
@@ -128,125 +139,97 @@
 </div>
 
 <style>
-.product-variants,
-.product-quantity {
-  margin: 25px 0;
+.product-inventory {
+  margin-top: var(--space-m);
+  text-align: center;
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: 0.1em;
 }
 
-.product-variants label,
+.in-stock {
+  color: #4caf50;
+}
+
+.low-stock {
+  color: #ff9800;
+}
+
+.product-quantity {
+  margin-bottom: var(--space-m);
+}
+
 .product-quantity label {
   display: block;
-  margin-bottom: 10px;
+  margin-bottom: var(--space-xs);
   font-size: 13px;
+  letter-spacing: 0.1em;
   text-transform: uppercase;
-  letter-spacing: 1.5px;
   color: var(--color-gray);
 }
 
 .product-quantity input {
-  width: 80px;
-  padding: 15px;
-  border: 2px solid var(--color-light-gray);
-  background: var(--color-white);
-  font-family: var(--font-body);
-  font-size: 14px;
-  text-align: center;
-}
-
-.btn-add-to-cart {
   width: 100%;
-  padding: 20px;
-  background: var(--color-black);
-  color: var(--color-white);
-  border: 2px solid var(--color-black);
+  padding: var(--space-m);
+  border: 1px solid var(--color-border);
+  background: var(--color-white);
+  font-family: var(--font-sans);
+  font-size: 16px;
+  text-align: center;
+}
+
+.product-variants {
+  margin-bottom: var(--space-m);
+}
+
+.product-variants label {
+  display: block;
+  margin-bottom: var(--space-xs);
+  font-size: 13px;
+  letter-spacing: 0.1em;
   text-transform: uppercase;
-  letter-spacing: 2px;
-  font-size: 13px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: var(--transition);
-  font-family: var(--font-body);
-}
-
-.btn-add-to-cart:hover:not(:disabled) {
-  background: transparent;
-  color: var(--color-black);
-}
-
-.btn-add-to-cart:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
-}
-
-.product-inventory {
-  margin-top: 15px;
-  text-align: center;
-}
-
-.low-stock {
-  color: #d32f2f;
-  font-size: 13px;
-  font-weight: 600;
-}
-
-.price-compare {
-  text-decoration: line-through;
   color: var(--color-gray);
-  margin-right: 10px;
-}
-
-.price-sale {
-  color: #d32f2f;
-  font-weight: 700;
-}
-
-.price-badge {
-  display: inline-block;
-  background: #d32f2f;
-  color: white;
-  padding: 5px 10px;
-  font-size: 11px;
-  margin-left: 10px;
-  border-radius: 3px;
-}
-
-.product-details {
-  margin-top: 40px;
-  padding-top: 40px;
-  border-top: 1px solid var(--color-light-gray);
-}
-
-.product-details h3 {
-  font-size: 1.2rem;
-  margin-bottom: 15px;
-  color: var(--color-dark);
-}
-
-.product-details p {
-  color: var(--color-gray);
-  line-height: 1.8;
-}
-
-.related-products {
-  margin-top: 100px;
-  padding-top: 60px;
-  border-top: 1px solid var(--color-light-gray);
-}
-
-.related-products h2 {
-  text-align: center;
-  margin-bottom: 60px;
-  font-size: 2.5rem;
 }
 </style>
 
 <script>
-document.getElementById('product-select')?.addEventListener('change', function() {
-  const selectedOption = this.options[this.selectedIndex];
-  const price = selectedOption.getAttribute('data-price');
-  const priceElement = document.querySelector('.product-price');
-  if (priceElement && price) {
-    priceElement.textContent = price;
+document.addEventListener('DOMContentLoaded', function() {
+  const variantSelect = document.getElementById('product-select');
+  const addToCartButton = document.getElementById('add-to-cart-button');
+  const variantIdInput = document.getElementById('product-variant-id');
+  
+  if (variantSelect) {
+    variantSelect.addEventListener('change', function() {
+      const selectedOption = this.options[this.selectedIndex];
+      const available = selectedOption.getAttribute('data-available') === 'true';
+      const variantId = selectedOption.value;
+      const price = selectedOption.getAttribute('data-price');
+      
+      // Update hidden input
+      if (variantIdInput) {
+        variantIdInput.value = variantId;
+      }
+      
+      // Update price display
+      const priceElement = document.querySelector('.product-price');
+      if (priceElement && price) {
+        priceElement.textContent = price;
+      }
+      
+      // Update button state
+      const buttonText = addToCartButton.querySelector('.btn-text');
+      if (available) {
+        addToCartButton.disabled = false;
+        if (buttonText) {
+          buttonText.textContent = '{{ 'products.product.add_to_cart' | t }}';
+        }
+      } else {
+        addToCartButton.disabled = true;
+        if (buttonText) {
+          buttonText.textContent = '{{ 'products.product.sold_out' | t }}';
+        }
+      }
+    });
   }
 });
 </script>
