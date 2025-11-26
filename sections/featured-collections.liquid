@@ -24,7 +24,7 @@
         {% endfor %}
       {% else %}
         {%- comment -%} Si no hay bloques configurados, mostrar todas las colecciones {%- endcomment -%}
-        {% for collection in collections limit: 5 %}
+        {% for collection in collections limit: 7 %}
           {% unless collection.handle == 'frontpage' %}
             <div class="collection-item">
               <a href="{{ collection.url }}">
